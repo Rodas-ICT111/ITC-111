@@ -1,135 +1,108 @@
-// Word list arrays
+// Selecting Elements
+const clear = document.querySelector(".clear"); // selects clear button
+const dateElement = document.getElementById("date"); // shows todays date
+const list = document.getElementById("list"); // where items live
+const input = document.getElementById("input"); // get user input
 
-// English Lists
-var greetings_En = ["Hello","How are you?","What\'s up?","Nice to meet you."];
-var bodyParts_En = ["head","chest","back","arm","leg"];
-var colors_En = ["red","orange","yellow","green","blue","indigo"];
+// Classes Names
+const CHECK = "fa-check-circle"; 
+const UNCHECK = "fa-circle-thin";
+const LINE_THROUGH = "lineThrough";
 
-// Swahili Lists
-var greetings_Sw = ["Hibari","Hibari gani?","Kuna Nini?","Ni yema kukutana na wewe."];
-var bodyParts_Sw = ["kichwa","kifua","mgongo","mkono","mguu"];
-var colors_Sw = ["nyekunu","chungwa","manjano","kijani","bluu","bluu ya kati"];
+// Variables 
+let LIST,id;
 
-// variable to display current word 
-var word = document.getElementById("wrd");
+// Get item from localStorage
+let data = localStorage.getItem("TODO");
 
-// variable to store the current word
-var crrWrd;
-// variables to store word lists
-var crrLst;
-var trgLst;
-
-// variable to store index of word in a list
-var ndx;
-
-// variable to store flipped state of a word
-var flipped = false;
-
-function init(){
-    // set crrLst
-    crrLst = greetings_En;
-    // set trgLst
-    trgLst = greetings_En;
-    // set crrWrd
-    crrWrd = crrLst[0];
-    // set display
-    word.innerHTML = crrWrd;
-    // set ndx
-    ndx = crrLst.indexOf(crrWrd)
+// check if data is empty
+if(data){
+    LIST = JSON.parse(data);
+    id = LIST.length; // set id to last in list
+    loadList(LIST); // load list into the interface
+}else{
+    // if data isn't empty
+    LIST = [];
+    id = 0;
 }
 
-// Change category control
-function chgList(trg){
-    switch(trg.value){
-        case "greetings":
-            crrLst = greetings_En;
-            trgLst = greetings_Sw;
-            word.innerHTML = crrLst[ndx];
-            break;
-        case "bodyParts":
-            crrLst = bodyParts_En;
-            trgLst = bodyParts_Sw;
-            word.innerHTML = crrLst[ndx];
-            break;
-        case "colors":
-            crrLst = colors_En;
-            trgLst = colors_Sw;
-            word.innerHTML = crrLst[ndx];
-            break;
-    }
+// load item to user interface
+function loadList(array){
+    array.forEach(function(item){
+        addToDo(item.name, item.id, item.done, item.trash);
+    });
 }
 
-function prvWrd() {
-    if(ndx > 0){
-        ndx--;
-    }else{
-        ndx = (crrLst.length-1);
-    }
-    word.innerHTML = crrLst[ndx];
+// clear the local storage
+clear.addEventListener('click', function(){
+    localStorage.clear();
+    location.reload();
+}); // Ended first class here
+
+// Show todays date
+const options = {weekday : "long", month:"short", day:"numeric"};
+const today = new Date();
+
+dateElement.innerHTML = today.toLocaleDateString("en-US", options);
+
+// add to do 
+function addToDo(toDo, id, done, trash){
+    if(trash){ return; }
+
+    const DONE = done ? CHECK : UNCHECK;
+    const LINE = done ? LINE_THROUGH : "";
+
+    const item = `<li class="item">
+                    <i class="fa ${DONE} co" job="complete" id="${id}"></i>
+                    <p class="text ${LINE}">${toDo}</p>
+                    <i class="fa fa-trash-o de" job="delete" id="${id}"></i>
+                </li>`
+    const position = "beforeend";
+
+    list.insertAdjacentHTML(position, item);
 }
 
-function flipWrd() {
-    if(flipped){
-        word.innerHTML = crrLst[ndx];
-        flipped = false;
-    }else{
-        word.innerHTML = trgLst[ndx];
-        flipped = true;
-    }
-}
-
-function nxtWrd() {
-    if(ndx < (crrLst.length-1)){
-        ndx++;
-    }else{
-        ndx = 0;
-    }
-    word.innerHTML = crrLst[ndx];
-}
-
-
-
-document.onload = init();
-//
-
-
-function setList (trg){
-switch(trg.id){
-    case "target1":
-        if(trg.value == "English"){
-            crrLst = greetings_En;
-        }else{
-            crrLst = greetings_Sw;
+// after entering a todo item you will need to press enter to add the item
+document.addEventListener("keyup",function(even){
+    if(event.keyCode == 13){
+        const toDo = input.value;
+        // if the input isn't empty
+        if(toDo){
+            addToDo(toDo, id, false, false);
+                LIST.push({
+                        name : toDo,
+                        id : id,
+                        done : false,
+                        trash : false
+                });
+                // add item to localStorage. MUST BE ADDED WHERE LIST ARRAY IS UPDATED.
+                localStorage.setItem("TODO", JSON.stringify(LIST));
+                id++;
         }
-        break;
-
-    case "target2":
-        if(trg.value == "English"){
-            trgLst = greetings_En;
-        }else{
-            trgLst = greetings_Sw;
-        }
-        break;
+        input.value = "";
     }
+});
+
+// complete to do
+function completeToDo(element){
+    element.classList.toggle(CHECK);
+    element.classList.toggle(UNCHECK);
+    element.parentNode.querySelector(".text").classList.toggle(LINE_THROUGH);
+    LIST[element.id].done = LIST[element.id].done ? false : true;
 }
 
-//this willl swap the lists so that the current list becomes the target list and vice versa
-//
-function swapTraget(){
-    var trg1= document.getElementById("target1").value;
-    var trg2= document.getElementById("target2").value;
-    var tmpTrg = trg1;
-    document.getElementById("target1").value=trg2;
-    document.getElementById("target2").value=tmpTrg;
-
-    var tmpLst = crrLst;
-    crrLst = trgLst;
-    trgLst = tmpLst;
-
-    crrWrd = crrLst[ndx];
-
-    word.innerHTML = crrWrd;
-
+// remove to do
+function removeToDo(element){
+    element.parentNode.parentNode.removeChild(element.parentNode);
+    LIST[element.id].trash = true;
 }
 
-document.onload = init();
+list.addEventListener("click", function(event) {
+    const element = event.target; // return the clicked element inside list
+    const elementJob = element.attributes.job.value; // complete or delete
+    if(elementJob == "complete") {
+        completeToDo(element)
+    }else if(elementJob == "delete"){
+        removeToDo(element)
+    }
+});

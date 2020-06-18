@@ -2,62 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Class Exercise 07a</title>
+    <title>Flash Card</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="index.js"></script>
 </head>
 <body>
+    <div id="main" class="center">
+        <!-- Header Section Start -->
+        <header>
+            <h3 class="center">Flash Card</h3>
+        </header>
+        <!-- Header Section End -->
 
-    <div id='outerDiv'>
 
-        <div>
-            <ul>
-                <li>
-                    <a href="#" onclick='changeLinkText("home")'>Home</a>
-                </li>
-                <li>
-                    <a href="#" onclick='changeLinkText("classEx")'>Class Exercises</a>
-                </li>
-                <li>
-                    <a href="#" onclick='changeLinkText("assign")'>Assignments</a>
-                </li>
-                <li>
-                    <a href="#" onclick='changeLinkText("resource")'>Resources</a>
-                </li>
-            </ul>
-        </div>
-        <div id='innerDivBodyLeft_Default'>
-            <h4 id="ls_Heading">ITC-111</h4>
-            <hr>
-            <div id="divLeft_Default">
-                <a href='#' class='divLeftLinks' onclick='changeDivRightText("Course Overview")'>Course Overview</a><br>
-                <a href='#' class='divLeftLinks' onclick='changeDivRightText("Goals & Objectives")'>Goals &
-                    Objectives</a><br>
-                <a href='#' class='divLeftLinks' onclick='changeDivRightText("History")'>History</a>
-            </div>
-            <div id="divLeft_CELinks">
-                <a href='calculator.html' target='_blank' class='divLeftLinks' onclick='changeDivRightText("Class Ex 01")'>Class Ex - Calculator </a><br>
-                <a href='#' class='divLeftLinks' onclick='changeDivRightText("Class Ex 02")'>Class Exercise 02</a><br>
-            </div>
-            <div id="divLeft_ALinks">
-                <a href='#' class='divLeftLinks' onclick='changeDivRightText("Assignment 01")'>Assignment 01</a><br>
-                <a href='#' class='divLeftLinks' onclick='changeDivRightText("Assignment 02")'>Assignment 02</a><br>
-            </div>
-            <div id="divLeft_RLinks">
-                <a href='#' class='divLeftLinks' onclick='changeDivRightText("Resources 01")'>Resource 01</a><br>
-                <a href='#' class='divLeftLinks' onclick='changeDivRightText("Resources 02")'>Resource 02</a><br>
-            </div>
-        </div>
+        <!-- Category Selector Start -->
+        <section id="chooseCat" class="center margin">
+            <select id="category" onchange="chgList(this)">
+                <option value="greetings">Greetings</option>
+                <option value="bodyParts">Body Parts</option>
+                <option value="colors">Colors</option>
+            </select>
+        </section>
+        <!-- Category Selector End -->
 
-        <!--
-This div is lined up right next to the previous one. CSS is used to align it
-to the left. Div's would normaly stack as they are block elements.
--->
-        <div id='innerDivBodyRight'>
-            <h2 id="rs_Heading">Intro to Programming <br>w/HTML, CSS & JavaScript</h2>
-            <p id="divRight">Content loaded in div on page load by default.</p>
-        </div>
+
+        <!-- Image Display Start -->
+            <section id="targetImg" class="center margin">
+                <img src="" alt="">
+                <div id="wrd" class="trgWrd"></div>
+            </section>
+        <!-- Image Display End -->
+
+
+        <!-- Flip Button Start -->
+        <section id="pagination" class="center margin">
+            <a href="#">
+                <section id="prevWord" class="pgBtn center margin">
+                    <p id="prev" onclick="prvWrd()"><<</p>
+                </section>
+                <a href="#">
+                    <section id="flipWord" class="pgBtn center margin">
+                        <p id="flip" onclick="flipWrd()">Flip</p>
+                    </section>
+                </a>
+                <a href="#">
+                    <section id="nextWord" class="pgBtn center margin">
+                        <p id="next" onclick="nxtWrd()">>></p>
+                    </section>
+                </a>
+            </a>
+        </section>
+        <!-- Flip Button  End -->
+
+
+        <!-- Language Selector Start -->
+        <section id="swapLangBtn" class="center margin">
+            <select id="target1" onchange="setList(this)">
+                <option value="English">English</option>
+                <option value="Swahili">Swahili</option>
+            </select>
+            <input id="swapBtn" type="button" value="<=>" onclick="swapTargets()">
+            <select id="target2" onchange="setList(this)">
+                <option value="English">English</option>
+                <option value="Swahili">Swahili</option>
+            </select>
+        </section>
+        <!-- Language Selector End -->
     </div>
+    <script src="app.js"></script>
 </body>
-
 </html>
